@@ -2,7 +2,7 @@ import time
 
 
 class Pack:
-    def __init__(self, material, tightness, volume, expiration):
+    def __init__(self, material, tightness, Pvolume, expiration):
         if type(material) == str:
             self.material = material
             print("material:", material)
@@ -12,9 +12,9 @@ class Pack:
                 print("tightness:", 'yes')
             else:
                 print("tightness:", 'no')
-        if type(volume) == int or type(volume) == float:
-            self.volume = volume
-            print("volume:", volume, "liters")
+        if type(Pvolume) == int or type(Pvolume) == float:
+            self.Pvolume = Pvolume
+            print("volume:", Pvolume, "liters")
         if type(expiration) == int:
             self.expiration = expiration
             print("expires in", expiration, "days")
@@ -81,6 +81,12 @@ class Milk(Product):
         print("recommended temperature:", self.recommended_temperature)
         print("current temperature:", self.current_temperature)
 
+    def separation(self):
+        if self.volume >= 1:
+            self.volume -= 1
+            pm = Packed_Milk(self.heat_treatment, self.fat_percent, 1, self.expiration_date, self.weight, self.recommended_temperature,
+                 self.current_temperature, 'cardboard', True, 2, 20)
+            return pm
 
 m = Milk("", 25, 50, 28, 1.2, 12, 15)
 print()
@@ -88,11 +94,17 @@ m.info()
 print()
 m.mgnov_past()
 m.info()
+print()
 
 
 class Packed_Milk(Milk, Pack):
     def __init__(self, heat_treatment, fat_percent, volume, expiration_date, weight, recommended_temperature,
-                 current_temperature):
-        super(Packed_Milk, self).__init__(heat_treatment, fat_percent, volume, expiration_date, weight,
-                                          recommended_temperature, current_temperature)
-        
+                 current_temperature, material, tightness, Pvolume, expiration):
+        Milk.__init__(self, heat_treatment, fat_percent, volume, expiration_date, weight, recommended_temperature,
+                 current_temperature)
+        Pack.__init__(self, material, tightness, Pvolume, expiration)
+
+
+array = []
+array.append(m.separation())
+print(array)
